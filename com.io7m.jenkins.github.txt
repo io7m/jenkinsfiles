@@ -9,7 +9,7 @@ pipeline {
 
   stages {
 
-    stage('Build') {
+    stage('BuildAndTest') {
       parallel {
         stage('macOS:openjdk-9-hotspot') {
           agent { label 'macOS' }
@@ -18,7 +18,7 @@ pipeline {
             maven 'maven-3.5.3'
           }
           steps {
-            sh 'mvn -e clean compile'
+            sh 'mvn -e clean verify'
           }
         }
         stage('macOS:openjdk-10-hotspot') {
@@ -28,7 +28,7 @@ pipeline {
             maven 'maven-3.5.3'
           }
           steps {
-            sh 'mvn -e clean compile'
+            sh 'mvn -e clean verify'
           }
         }
 
@@ -39,7 +39,7 @@ pipeline {
             maven 'maven-3.5.3'
           }
           steps {
-            sh 'mvn -e clean compile'
+            sh 'mvn -e clean verify'
           }
         }
         stage('linux:openjdk-10-hotspot') {
@@ -49,7 +49,7 @@ pipeline {
             maven 'maven-3.5.3'
           }
           steps {
-            sh 'mvn -e clean compile'
+            sh 'mvn -e clean verify'
           }
         }
 
@@ -60,67 +60,10 @@ pipeline {
 //            maven 'maven-3.5.3'
 //          }
 //          steps {
-//            sh 'mvn -e clean compile'
+//            sh 'mvn -e clean verify'
 //          }
 //        }
       }
     }
-
-    stage('Test') {
-      parallel {
-        stage('macOS:openjdk-9-hotspot') {
-          agent { label 'macOS' }
-          tools {
-            jdk   'openjdk-9-hotspot'
-            maven 'maven-3.5.3'
-          }
-          steps {
-            sh 'mvn -e test'
-          }
-        }
-        stage('macOS:openjdk-10-hotspot') {
-          agent { label 'macOS' }
-          tools {
-            jdk   'openjdk-10-hotspot'
-            maven 'maven-3.5.3'
-          }
-          steps {
-            sh 'mvn -e test'
-          }
-        }
-
-        stage('linux:openjdk-9-hotspot') {
-          agent { label 'linux' }
-          tools {
-            jdk   'openjdk-9-hotspot'
-            maven 'maven-3.5.3'
-          }
-          steps {
-            sh 'mvn -e test'
-          }
-        }
-        stage('linux:openjdk-10-hotspot') {
-          agent { label 'linux' }
-          tools {
-            jdk   'openjdk-10-hotspot'
-            maven 'maven-3.5.3'
-          }
-          steps {
-            sh 'mvn -e test'
-          }
-        }
-//        stage('linux:openjdk-11-hotspot') {
-//          agent { label 'linux' }
-//          tools {
-//            jdk   'openjdk-11-hotspot'
-//            maven 'maven-3.5.3'
-//          }
-//          steps {
-//            sh 'mvn -e test'
-//          }
-//        }
-      }
-    }
-
   }
 }
