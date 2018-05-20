@@ -16,11 +16,11 @@ pipeline {
             jdk   'openjdk-9-hotspot'
             maven 'maven-3.5.3'
           }
-          withMaven(
-            maven: 'maven-3.5.3',
-            mavenLocalRepo: '.repository') {
-            steps {
-              sh 'mvn -e clean verify'
+          steps {
+            withMaven(
+              maven: 'maven-3.5.3',
+              mavenLocalRepo: '.repository') {
+              sh 'mvn -e clean install'
             }
           }
         }
@@ -30,11 +30,11 @@ pipeline {
             jdk   'openjdk-10-hotspot'
             maven 'maven-3.5.3'
           }
-          withMaven(
-            maven: 'maven-3.5.3',
-            mavenLocalRepo: '.repository') {
-            steps {
-              sh 'mvn -e clean verify'
+          steps {
+            withMaven(
+              maven: 'maven-3.5.3',
+              mavenLocalRepo: '.repository') {
+              sh 'mvn -e clean install'
             }
           }
         }
@@ -44,11 +44,11 @@ pipeline {
             jdk   'openjdk-9-hotspot'
             maven 'maven-3.5.3'
           }
-          withMaven(
-            maven: 'maven-3.5.3',
-            mavenLocalRepo: '.repository') {
-            steps {
-              sh 'mvn -e clean verify'
+          steps {
+            withMaven(
+              maven: 'maven-3.5.3',
+              mavenLocalRepo: '.repository') {
+              sh 'mvn -e clean install'
             }
           }
         }
@@ -58,11 +58,11 @@ pipeline {
             jdk   'openjdk-10-hotspot'
             maven 'maven-3.5.3'
           }
-          withMaven(
-            maven: 'maven-3.5.3',
-            mavenLocalRepo: '.repository') {
-            steps {
-              sh 'mvn -e clean verify'
+          steps {
+            withMaven(
+              maven: 'maven-3.5.3',
+              mavenLocalRepo: '.repository') {
+              sh 'mvn -e clean install'
             }
           }
         }
