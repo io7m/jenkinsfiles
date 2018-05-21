@@ -20,7 +20,7 @@ pipeline {
             withMaven(
               maven: 'maven-3.5.3',
               mavenLocalRepo: '.repository') {
-              sh 'mvn -C -e -U clean install site'
+              sh 'mvn -C -e -U clean install'
             }
           }
         }
@@ -34,7 +34,7 @@ pipeline {
             withMaven(
               maven: 'maven-3.5.3',
               mavenLocalRepo: '.repository') {
-              sh 'mvn -C -e -U clean install site'
+              sh 'mvn -C -e -U clean install'
             }
           }
         }
@@ -48,7 +48,7 @@ pipeline {
             withMaven(
               maven: 'maven-3.5.3',
               mavenLocalRepo: '.repository') {
-              sh 'mvn -C -e -U clean install site'
+              sh 'mvn -C -e -U clean install'
             }
           }
         }
@@ -62,7 +62,7 @@ pipeline {
             withMaven(
               maven: 'maven-3.5.3',
               mavenLocalRepo: '.repository') {
-              sh 'mvn -C -e -U clean install site'
+              sh 'mvn -C -e -U clean install'
             }
           }
         }
