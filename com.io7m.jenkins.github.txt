@@ -85,7 +85,7 @@ pipeline {
                 variable: 'JENKINS_JMS_TRUST_STORE_PASSWORD'
               )
             ]) {
-              sh ".jenkins/notify.sh success"
+              sh ".jenkins/notify.sh failure"
             }
           }
         }
