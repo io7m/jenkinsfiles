@@ -11,11 +11,11 @@ pipeline {
           agent { label 'linux' }
           tools {
             jdk   'openjdk-11-hotspot'
-            maven 'maven-3.6.0'
+            maven 'maven-3.6.1'
           }
           steps {
             withMaven(
-              maven: 'maven-3.6.0',
+              maven: 'maven-3.6.1',
               mavenLocalRepo: '.repository') {
               sh 'mvn -C -e -U clean install site'
             }
@@ -28,7 +28,7 @@ pipeline {
       when { buildingTag() }
       steps {
         withMaven(
-          maven: 'maven-3.6.0',
+          maven: 'maven-3.6.1',
           mavenLocalRepo: '.repository') {
           sh 'mvn -P arc7-deploy -C -e deploy'
         }
@@ -41,7 +41,7 @@ pipeline {
       node('mustard') {
         script {
           withMaven(
-            maven: 'maven-3.6.0',
+            maven: 'maven-3.6.1',
             mavenLocalRepo: '.repository') {
             withCredentials([
               usernamePassword(
@@ -68,7 +68,7 @@ pipeline {
       node('mustard') {
         script {
           withMaven(
-            maven: 'maven-3.6.0',
+            maven: 'maven-3.6.1',
             mavenLocalRepo: '.repository') {
             withCredentials([
               usernamePassword(
