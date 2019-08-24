@@ -23,6 +23,7 @@ pipeline {
         }
       }
     }
+
     stage('Deploy') {
       agent { label 'linux' }
       tools {
@@ -32,7 +33,7 @@ pipeline {
       steps {
         script {
           def pom = readMavenPom file: 'pom.xml'
-          if (pom.version.endsWith("-SNAPSHOT") {
+          if (pom.version.endsWith("-SNAPSHOT")) {
             withMaven(
               maven: 'maven-3.6.1',
               mavenLocalRepo: '.repository') {
