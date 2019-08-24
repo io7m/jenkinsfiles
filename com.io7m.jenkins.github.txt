@@ -5,42 +5,68 @@ pipeline {
   agent none
 
   stages {
-    stage('BuildAndTest') {
-      parallel {
-        stage('linux:openjdk-11-hotspot') {
-          agent { label 'linux' }
-          tools {
-            jdk   'openjdk-11-hotspot'
-            maven 'maven-3.6.1'
-          }
-          steps {
-            script {
-              def isTagged = sh(returnStatus: true, script: "git describe --contains HEAD 2>/dev/null") == 0
-              def pom = readMavenPom file: 'pom.xml'
-              def isSnapshot = pom.version.endsWith("-SNAPSHOT")
+    stage('Build:linux:openjdk-11-hotspot') {
+      agent {
+        label 'linux'
+      }
+      tools {
+        jdk   'openjdk-11-hotspot'
+        maven 'maven-3.6.1'
+      }
+      steps {
+        withMaven(
+          maven: 'maven-3.6.1',
+          mavenLocalRepo: '.repository') {
+          sh 'env | sort'
+          sh 'mvn -C -e -U clean install site'
+        }
+      }
+    }
 
-              if (isSnapshot || isTagged) {
-                if (isSnapshot) {
-                  echo "${pom.version} is a -SNAPSHOT version; deploy to Central"
-                }
-                if (isTagged) {
-                  echo "current git commit is tagged; deploy to Central"
-                }
-                withMaven(
-                  maven: 'maven-3.6.1',
-                  mavenLocalRepo: '.repository') {
-                  sh 'env | sort'
-                  sh 'mvn -C -e -U -Dio7m.release=true -Dio7m.deployment=true clean deploy site'
-                }
-              } else {
-                echo "${pom.version} is not a -SNAPSHOT version; doing a plain build"
-                withMaven(
-                  maven: 'maven-3.6.1',
-                  mavenLocalRepo: '.repository') {
-                  sh 'env | sort'
-                  sh 'mvn -C -e -U clean install site'
-                }
-              }
+    stage('Build:linux:openjdk-12-hotspot') {
+      agent {
+        label 'linux'
+      }
+      tools {
+        jdk   'openjdk-12-hotspot'
+        maven 'maven-3.6.1'
+      }
+      steps {
+        withMaven(
+          maven: 'maven-3.6.1',
+          mavenLocalRepo: '.repository') {
+          sh 'env | sort'
+          sh 'mvn -C -e -U clean install site'
+        }
+      }
+    }
+
+    stage('Deploy:linux:openjdk-12-hotspot') {
+      agent {
+        label 'linux'
+      }
+      tools {
+        jdk   'openjdk-12-hotspot'
+        maven 'maven-3.6.1'
+      }
+      steps {
+        script {
+          def isTagged = sh(returnStatus: true, script: "git describe --contains HEAD 2>/dev/null") == 0
+          def pom = readMavenPom file: 'pom.xml'
+          def isSnapshot = pom.version.endsWith("-SNAPSHOT")
+
+          if (isSnapshot || isTagged) {
+            if (isSnapshot) {
+              echo "${pom.version} is a -SNAPSHOT version; deploy to Central"
+            }
+            if (isTagged) {
+              echo "current git commit is tagged; deploy to Central"
+            }
+            withMaven(
+              maven: 'maven-3.6.1',
+              mavenLocalRepo: '.repository') {
+              sh 'env | sort'
+              sh 'mvn -Dbnd.baseline.skip=true -Dcheckstyle.skip=true -Denforcer.skip=true -DskipTests=true -Dspotbugs.skip=true -Dmdep.analyze.skip -Dio7m.release=true -Dio7m.deployment=true deploy'
             }
           }
         }
