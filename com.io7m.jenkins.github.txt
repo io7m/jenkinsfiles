@@ -37,7 +37,7 @@ pipeline {
             withMaven(
               maven: 'maven-3.6.1',
               mavenLocalRepo: '.repository') {
-              echo "Would have deployed snapshot"
+              sh 'mvn -Dio7m.release=true deploy'
             }
           }
         }
