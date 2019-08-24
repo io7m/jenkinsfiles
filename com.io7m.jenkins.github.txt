@@ -22,7 +22,7 @@ pipeline {
                   maven: 'maven-3.6.1',
                   mavenLocalRepo: '.repository') {
                   sh 'env | sort'
-                  sh 'mvn -C -e -U -Dio7m.release=true clean deploy site'
+                  sh 'mvn -C -e -U -Dio7m.release=true -Dio7m.deployment=true clean deploy site'
                 }
               } else {
                 echo "${pom.version} is not a -SNAPSHOT version; doing a plain build"
