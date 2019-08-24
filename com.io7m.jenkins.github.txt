@@ -21,6 +21,7 @@ pipeline {
                 withMaven(
                   maven: 'maven-3.6.1',
                   mavenLocalRepo: '.repository') {
+                  sh 'env | sort'
                   sh 'mvn -C -e -U -Dio7m.release=true clean deploy site'
                 }
               } else {
@@ -28,6 +29,7 @@ pipeline {
                 withMaven(
                   maven: 'maven-3.6.1',
                   mavenLocalRepo: '.repository') {
+                  sh 'env | sort'
                   sh 'mvn -C -e -U clean install site'
                 }
               }
