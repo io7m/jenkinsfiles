@@ -14,30 +14,23 @@ pipeline {
             maven 'maven-3.6.1'
           }
           steps {
-            withMaven(
-              maven: 'maven-3.6.1',
-              mavenLocalRepo: '.repository') {
-              sh 'mvn -C -e -U clean install site'
-            }
-          }
-        }
-      }
-    }
-
-    stage('Deploy') {
-      agent { label 'linux' }
-      tools {
-        jdk   'openjdk-11-hotspot'
-        maven 'maven-3.6.1'
-      }
-      steps {
-        script {
-          def pom = readMavenPom file: 'pom.xml'
-          if (pom.version.endsWith("-SNAPSHOT")) {
-            withMaven(
-              maven: 'maven-3.6.1',
-              mavenLocalRepo: '.repository') {
-              sh 'mvn -Dio7m.release=true deploy'
+            script {
+              def pom = readMavenPom file: 'pom.xml'
+              if (pom.version.endsWith("-SNAPSHOT")) {
+                echo "${pom.version} is a -SNAPSHOT version; deploy to Central"
+                withMaven(
+                  maven: 'maven-3.6.1',
+                  mavenLocalRepo: '.repository') {
+                  sh 'mvn -C -e -U -Dio7m.release=true clean deploy site'
+                }
+              } else {
+                echo "${pom.version} is not a -SNAPSHOT version; doing a plain build"
+                withMaven(
+                  maven: 'maven-3.6.1',
+                  mavenLocalRepo: '.repository') {
+                  sh 'mvn -C -e -U clean install site'
+                }
+              }
             }
           }
         }
