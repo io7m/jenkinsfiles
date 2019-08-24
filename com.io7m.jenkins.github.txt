@@ -25,12 +25,14 @@ pipeline {
     }
 
     stage('Deploy') {
-      when { buildingTag() }
+      when { 
+        readMavenPom().getVersion().endsWith("-SNAPSHOT")
+      }
       steps {
         withMaven(
           maven: 'maven-3.6.1',
           mavenLocalRepo: '.repository') {
-          sh 'mvn -P arc7-deploy -C -e deploy'
+          echo "Would have deployed snapshot"
         }
       }
     }
