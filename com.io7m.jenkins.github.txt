@@ -15,9 +15,17 @@ pipeline {
           }
           steps {
             script {
+              def isTagged = !sh(returnStdout: true, script: "git describe --contains HEAD 2>/dev/null").trim().isEmpty()
               def pom = readMavenPom file: 'pom.xml'
-              if (pom.version.endsWith("-SNAPSHOT")) {
-                echo "${pom.version} is a -SNAPSHOT version; deploy to Central"
+              def isSnapshot = pom.version.endsWith("-SNAPSHOT")
+
+              if (isSnapshot || isTagged) {
+                if (isSnapshot) {
+                  echo "${pom.version} is a -SNAPSHOT version; deploy to Central"
+                }
+                if (isTagged) {
+                  echo "current git commit is tagged; deploy to Central"
+                }
                 withMaven(
                   maven: 'maven-3.6.1',
                   mavenLocalRepo: '.repository') {
