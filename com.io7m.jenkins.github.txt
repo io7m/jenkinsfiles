@@ -4,6 +4,10 @@ pipeline {
 
   agent none
 
+  environment {
+    IO7M_PROJECT_IS_SNAPSHOT = readMavenPom().getVersion().endsWith("-SNAPSHOT")
+  }
+
   stages {
     stage('BuildAndTest') {
       parallel {
@@ -26,7 +30,7 @@ pipeline {
 
     stage('Deploy') {
       when { 
-        readMavenPom().getVersion().endsWith("-SNAPSHOT")
+        environment name: 'IO7M_PROJECT_IS_SNAPSHOT', value: 'true'
       }
       steps {
         withMaven(
