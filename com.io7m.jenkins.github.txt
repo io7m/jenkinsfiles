@@ -11,11 +11,11 @@ pipeline {
       }
       tools {
         jdk   'openjdk-11-hotspot'
-        maven 'maven-3.6.1'
+        maven 'maven-3.6.3'
       }
       steps {
         withMaven(
-          maven: 'maven-3.6.1',
+          maven: 'maven-3.6.3',
           mavenLocalRepo: '.repository') {
           sh 'env | sort'
           sh 'mvn -C -e -U clean install site'
@@ -29,11 +29,11 @@ pipeline {
       }
       tools {
         jdk   'openjdk-12-hotspot'
-        maven 'maven-3.6.1'
+        maven 'maven-3.6.3'
       }
       steps {
         withMaven(
-          maven: 'maven-3.6.1',
+          maven: 'maven-3.6.3',
           mavenLocalRepo: '.repository') {
           sh 'env | sort'
           sh 'mvn -C -e -U clean install site'
@@ -47,7 +47,7 @@ pipeline {
       }
       tools {
         jdk   'openjdk-12-hotspot'
-        maven 'maven-3.6.1'
+        maven 'maven-3.6.3'
       }
       steps {
         script {
@@ -63,7 +63,7 @@ pipeline {
               echo "current git commit is tagged; deploy to Central"
             }
             withMaven(
-              maven: 'maven-3.6.1',
+              maven: 'maven-3.6.3',
               mavenLocalRepo: '.repository') {
               sh 'env | sort'
               sh 'mvn -Dbnd.baseline.skip=true -Dcheckstyle.skip=true -Denforcer.skip=true -DskipTests=true -Dspotbugs.skip=true -Dmdep.analyze.skip -Dio7m.release=true -Dio7m.deployment=true deploy'
@@ -79,7 +79,7 @@ pipeline {
       node('mustard') {
         script {
           withMaven(
-            maven: 'maven-3.6.1',
+            maven: 'maven-3.6.3',
             mavenLocalRepo: '.repository') {
             withCredentials([
               usernamePassword(
@@ -106,7 +106,7 @@ pipeline {
       node('mustard') {
         script {
           withMaven(
-            maven: 'maven-3.6.1',
+            maven: 'maven-3.6.3',
             mavenLocalRepo: '.repository') {
             withCredentials([
               usernamePassword(
