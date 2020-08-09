@@ -85,7 +85,7 @@ pipeline {
       }
     }
     failure {
-      node('starfruit') {
+      node('starfruit-mq') {
         script {
           withMaven(
             maven: 'maven-3.6.3',
