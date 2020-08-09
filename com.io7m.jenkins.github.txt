@@ -23,30 +23,12 @@ pipeline {
       }
     }
 
-    stage('Build:linux:openjdk-12-hotspot') {
+    stage('Deploy:linux:openjdk-11-hotspot') {
       agent {
         label 'linux'
       }
       tools {
-        jdk   'openjdk-12-hotspot'
-        maven 'maven-3.6.3'
-      }
-      steps {
-        withMaven(
-          maven: 'maven-3.6.3',
-          mavenLocalRepo: '.repository') {
-          sh 'env | sort'
-          sh 'mvn -C -e -U clean install site'
-        }
-      }
-    }
-
-    stage('Deploy:linux:openjdk-12-hotspot') {
-      agent {
-        label 'linux'
-      }
-      tools {
-        jdk   'openjdk-12-hotspot'
+        jdk   'openjdk-11-hotspot'
         maven 'maven-3.6.3'
       }
       steps {
@@ -76,7 +58,7 @@ pipeline {
 
   post {
     success {
-      node('mustard') {
+      node('starfruit') {
         script {
           withMaven(
             maven: 'maven-3.6.3',
@@ -103,7 +85,7 @@ pipeline {
       }
     }
     failure {
-      node('mustard') {
+      node('starfruit') {
         script {
           withMaven(
             maven: 'maven-3.6.3',
@@ -130,6 +112,5 @@ pipeline {
       }
     }
   }
-
 }
 
