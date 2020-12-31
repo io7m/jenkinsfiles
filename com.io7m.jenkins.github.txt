@@ -61,7 +61,7 @@ pipeline {
                 withMaven(
                   maven: 'maven-3.6.3',
                   mavenLocalRepo: '.repository') {
-                  sh 'echo do something'
+                  bat 'echo do something'
                 }
               }
             }
@@ -77,7 +77,7 @@ pipeline {
                 withMaven(
                   maven: 'maven-3.6.3',
                   mavenLocalRepo: '.repository') {
-                  sh 'echo do something'
+                  bat 'echo do something'
                 }
               }
             }
