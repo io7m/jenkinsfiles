@@ -7,75 +7,77 @@ pipeline {
   stages {
     stage('Build') {
       parallel {
-        stage('Build Linux') {
-          stage('Build:linux:openjdk-11-hotspot') {
-            agent {
-              label 'linux'
+        stages {
+          stage('Build Linux') {
+            stage('Build:linux:openjdk-11-hotspot') {
+              agent {
+                label 'linux'
+              }
+              tools {
+                jdk   'openjdk-11-hotspot'
+                maven 'maven-3.6.3'
+              }
+              steps {
+                withMaven(
+                  maven: 'maven-3.6.3',
+                  mavenLocalRepo: '.repository') {
+                  sh 'env | sort'
+                  sh 'mvn -C -e -U clean install site'
+                }
+              }
             }
-            tools {
-              jdk   'openjdk-11-hotspot'
-              maven 'maven-3.6.3'
-            }
-            steps {
-              withMaven(
-                maven: 'maven-3.6.3',
-                mavenLocalRepo: '.repository') {
-                sh 'env | sort'
-                sh 'mvn -C -e -U clean install site'
+            stage('Build:linux:openjdk-15-hotspot') {
+              agent {
+                label 'linux'
+              }
+              tools {
+                jdk   'openjdk-15-hotspot'
+                maven 'maven-3.6.3'
+              }
+              steps {
+                withMaven(
+                  maven: 'maven-3.6.3',
+                  mavenLocalRepo: '.repository') {
+                  sh 'env | sort'
+                  sh 'mvn -C -e -U clean install site'
+                }
               }
             }
           }
-          stage('Build:linux:openjdk-15-hotspot') {
-            agent {
-              label 'linux'
-            }
-            tools {
-              jdk   'openjdk-15-hotspot'
-              maven 'maven-3.6.3'
-            }
-            steps {
-              withMaven(
-                maven: 'maven-3.6.3',
-                mavenLocalRepo: '.repository') {
-                sh 'env | sort'
-                sh 'mvn -C -e -U clean install site'
-              }
-            }
-          }
-        }
 
-        stage('Build Windows') {
-          stage('Build:windows:openjdk-11-hotspot') {
-            agent {
-              label 'windows'
-            }
-            tools {
-              jdk   'openjdk-11-hotspot'
-              maven 'maven-3.6.3'
-            }
-            steps {
-              withMaven(
-                maven: 'maven-3.6.3',
-                mavenLocalRepo: '.repository') {
-                sh 'env | sort'
-                sh 'mvn -C -e -U clean install site'
+          stage('Build Windows') {
+            stage('Build:windows:openjdk-11-hotspot') {
+              agent {
+                label 'windows'
+              }
+              tools {
+                jdk   'openjdk-11-hotspot'
+                maven 'maven-3.6.3'
+              }
+              steps {
+                withMaven(
+                  maven: 'maven-3.6.3',
+                  mavenLocalRepo: '.repository') {
+                  sh 'env | sort'
+                  sh 'mvn -C -e -U clean install site'
+                }
               }
             }
-          }
-          stage('Build:windows:openjdk-15-hotspot') {
-            agent {
-              label 'windows'
-            }
-            tools {
-              jdk   'openjdk-15-hotspot'
-              maven 'maven-3.6.3'
-            }
-            steps {
-              withMaven(
-                maven: 'maven-3.6.3',
-                mavenLocalRepo: '.repository') {
-                sh 'env | sort'
-                sh 'mvn -C -e -U clean install site'
+            stage('Build:windows:openjdk-15-hotspot') {
+              agent {
+                label 'windows'
+              }
+              tools {
+                jdk   'openjdk-15-hotspot'
+                maven 'maven-3.6.3'
+              }
+              steps {
+                withMaven(
+                  maven: 'maven-3.6.3',
+                  mavenLocalRepo: '.repository') {
+                  sh 'env | sort'
+                  sh 'mvn -C -e -U clean install site'
+                }
               }
             }
           }
