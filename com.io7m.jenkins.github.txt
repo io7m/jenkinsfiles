@@ -61,7 +61,7 @@ pipeline {
                 withMaven(
                   maven: 'maven-3.6.3',
                   mavenLocalRepo: '.repository') {
-                  bat 'mvn -C -e -U clean install site'
+                  sh 'echo do something'
                 }
               }
             }
@@ -77,7 +77,7 @@ pipeline {
                 withMaven(
                   maven: 'maven-3.6.3',
                   mavenLocalRepo: '.repository') {
-                  bat 'mvn -C -e -U clean install site'
+                  sh 'echo do something'
                 }
               }
             }
