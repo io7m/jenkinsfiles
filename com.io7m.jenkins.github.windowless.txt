@@ -1,0 +1,101 @@
+#!groovy
+
+pipeline {
+
+  agent none
+
+  stages {
+    stage('Build:linux:openjdk-11-hotspot') {
+      agent {
+        label 'linux'
+      }
+      tools {
+        jdk   'openjdk-11-hotspot'
+        maven 'maven-3.6.3'
+      }
+      steps {
+        withMaven(
+          maven: 'maven-3.6.3',
+          mavenLocalRepo: '.repository') {
+          sh 'env | sort'
+          sh 'mvn -C -e -U clean install site'
+        }
+      }
+    }
+    stage('Build:linux:openjdk-15-hotspot') {
+      agent {
+        label 'linux'
+      }
+      tools {
+        jdk   'openjdk-15-hotspot'
+        maven 'maven-3.6.3'
+      }
+      steps {
+        withMaven(
+          maven: 'maven-3.6.3',
+          mavenLocalRepo: '.repository') {
+          sh 'env | sort'
+          sh 'mvn -C -e -U clean install site'
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      node('starfruit-mq') {
+        script {
+          withMaven(
+            maven: 'maven-3.6.3',
+            mavenLocalRepo: '.repository') {
+            withCredentials([
+              usernamePassword(
+                credentialsId: 'arc7-jms-credentials',
+                passwordVariable: 'JENKINS_JMS_PASSWORD',
+                usernameVariable: 'JENKINS_JMS_USER'
+              ),
+              file(
+                credentialsId: 'arc7-jenkins-trust-store',
+                variable: 'JENKINS_JMS_TRUST_STORE'
+              ),
+              string(
+                credentialsId: 'arc7-jenkins-trust-store-password',
+                variable: 'JENKINS_JMS_TRUST_STORE_PASSWORD'
+              )
+            ]) {
+              sh ".jenkins/notify.sh success"
+            }
+          }
+        }
+      }
+    }
+    failure {
+      node('starfruit-mq') {
+        script {
+          withMaven(
+            maven: 'maven-3.6.3',
+            mavenLocalRepo: '.repository') {
+            withCredentials([
+              usernamePassword(
+                credentialsId: 'arc7-jms-credentials',
+                passwordVariable: 'JENKINS_JMS_PASSWORD',
+                usernameVariable: 'JENKINS_JMS_USER'
+              ),
+              file(
+                credentialsId: 'arc7-jenkins-trust-store',
+                variable: 'JENKINS_JMS_TRUST_STORE'
+              ),
+              string(
+                credentialsId: 'arc7-jenkins-trust-store-password',
+                variable: 'JENKINS_JMS_TRUST_STORE_PASSWORD'
+              )
+            ]) {
+              sh ".jenkins/notify.sh failure"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
