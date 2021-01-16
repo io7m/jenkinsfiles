@@ -4,8 +4,11 @@ pipeline {
 
   agent none
 
-  stages {
+  options {
+    timeout(time: 15, unit: 'MINUTES')
+  }
 
+  stages {
     stage('Build') {
       parallel {
         stage('Build Linux') {
