@@ -4,10 +4,6 @@ pipeline {
 
   agent none
 
-  options {
-    timeout(time: 30, unit: 'MINUTES')
-  }
-
   stages {
     stage('Build') {
       parallel {
@@ -16,6 +12,9 @@ pipeline {
             stage('Build:linux:openjdk-11-hotspot') {
               agent {
                 label 'linux'
+              }
+              options {
+                timeout(time: 15, unit: 'MINUTES')
               }
               tools {
                 jdk   'openjdk-11-hotspot'
@@ -33,6 +32,9 @@ pipeline {
             stage('Build:linux:openjdk-15-hotspot') {
               agent {
                 label 'linux'
+              }
+              options {
+                timeout(time: 15, unit: 'MINUTES')
               }
               tools {
                 jdk   'openjdk-15-hotspot'
@@ -56,6 +58,9 @@ pipeline {
               agent {
                 label 'windows'
               }
+              options {
+                timeout(time: 15, unit: 'MINUTES')
+              }
               tools {
                 jdk   'openjdk-11-hotspot'
                 maven 'maven-3.6.3'
@@ -71,6 +76,9 @@ pipeline {
             stage('Build:windows:openjdk-15-hotspot') {
               agent {
                 label 'windows'
+              }
+              options {
+                timeout(time: 15, unit: 'MINUTES')
               }
               tools {
                 jdk   'openjdk-15-hotspot'
