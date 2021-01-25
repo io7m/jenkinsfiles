@@ -41,7 +41,7 @@ fi
 
 mvn \
   -U \
-  org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get \
+  org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
   -DgroupId=com.io7m.jsay \
   -DartifactId=com.io7m.jsay \
   -Dversion=0.0.1 \
