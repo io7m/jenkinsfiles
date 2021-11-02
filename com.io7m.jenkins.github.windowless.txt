@@ -5,34 +5,17 @@ pipeline {
   agent none
 
   stages {
-    stage('Build:linux:openjdk-11-hotspot') {
+    stage('Build:linux:openjdk-17-hotspot') {
       agent {
         label 'linux'
       }
       tools {
-        jdk   'openjdk-11-hotspot'
-        maven 'maven-3.6.3'
+        jdk   'openjdk-17-hotspot'
+        maven 'maven-3.8.3'
       }
       steps {
         withMaven(
-          maven: 'maven-3.6.3',
-          mavenLocalRepo: '.repository') {
-          sh 'env | sort'
-          sh 'mvn -C -e -U clean install site'
-        }
-      }
-    }
-    stage('Build:linux:openjdk-15-hotspot') {
-      agent {
-        label 'linux'
-      }
-      tools {
-        jdk   'openjdk-15-hotspot'
-        maven 'maven-3.6.3'
-      }
-      steps {
-        withMaven(
-          maven: 'maven-3.6.3',
+          maven: 'maven-3.8.3',
           mavenLocalRepo: '.repository') {
           sh 'env | sort'
           sh 'mvn -C -e -U clean install site'
@@ -46,7 +29,7 @@ pipeline {
       node('starfruit-mq') {
         script {
           withMaven(
-            maven: 'maven-3.6.3',
+            maven: 'maven-3.8.3',
             mavenLocalRepo: '.repository') {
             withCredentials([
               usernamePassword(
@@ -73,7 +56,7 @@ pipeline {
       node('starfruit-mq') {
         script {
           withMaven(
-            maven: 'maven-3.6.3',
+            maven: 'maven-3.8.3',
             mavenLocalRepo: '.repository') {
             withCredentials([
               usernamePassword(
