@@ -18,11 +18,11 @@ pipeline {
               }
               tools {
                 jdk   'openjdk-17-hotspot'
-                maven 'maven-3.8.3'
+                maven 'maven-3.8.6'
               }
               steps {
                 withMaven(
-                  maven: 'maven-3.8.3',
+                  maven: 'maven-3.8.6',
                   mavenLocalRepo: '.repository') {
                   sh 'env | sort'
                   sh 'mvn -C -e -U clean install site'
@@ -43,13 +43,13 @@ pipeline {
               }
               tools {
                 jdk   'openjdk-17-hotspot'
-                maven 'maven-3.8.3'
+                maven 'maven-3.8.6'
               }
               steps {
                 withMaven(
-                  maven: 'maven-3.8.3',
+                  maven: 'maven-3.8.6',
                   mavenLocalRepo: '.repository') {
-                  bat 'mvn -C -e -U clean install site'
+                  bat 'mvn "-Ddocker.skip.build=true" -C -e -U clean install site'
                 }
               }
             }
@@ -64,7 +64,7 @@ pipeline {
       }
       tools {
         jdk   'openjdk-17-hotspot'
-        maven 'maven-3.8.3'
+        maven 'maven-3.8.6'
       }
       steps {
         script {
@@ -80,7 +80,7 @@ pipeline {
               echo "current git commit is tagged; deploy to Central"
             }
             withMaven(
-              maven: 'maven-3.8.3',
+              maven: 'maven-3.8.6',
               mavenLocalRepo: '.repository') {
               sh 'env | sort'
               sh 'mvn -Dbnd.baseline.skip=true -Dcheckstyle.skip=true -Denforcer.skip=true -DskipTests=true -Dspotbugs.skip=true -Dmdep.analyze.skip -Dio7m.release=true -Dio7m.deployment=true deploy'
@@ -96,7 +96,7 @@ pipeline {
       node('starfruit-mq') {
         script {
           withMaven(
-            maven: 'maven-3.8.3',
+            maven: 'maven-3.8.6',
             mavenLocalRepo: '.repository') {
             withCredentials([
               usernamePassword(
@@ -123,7 +123,7 @@ pipeline {
       node('starfruit-mq') {
         script {
           withMaven(
-            maven: 'maven-3.8.3',
+            maven: 'maven-3.8.6',
             mavenLocalRepo: '.repository') {
             withCredentials([
               usernamePassword(
