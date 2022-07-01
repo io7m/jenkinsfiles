@@ -49,7 +49,7 @@ pipeline {
                 withMaven(
                   maven: 'maven-3.8.6',
                   mavenLocalRepo: '.repository') {
-                  bat 'mvn "-Ddocker.skip.build=true" -C -e -U clean install site'
+                  bat 'mvn -C -e -U -Ddocker.skip=true clean install site'
                 }
               }
             }
