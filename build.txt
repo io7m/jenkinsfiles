@@ -74,6 +74,9 @@ pipeline {
           def pom = readMavenPom file: 'pom.xml'
           def isSnapshot = pom.version.endsWith("-SNAPSHOT")
 
+          echo "isTagged: ${isTagged}"
+          echo "isSnapshot: ${isSnapshot}"
+
           if (isSnapshot) {
             echo "${pom.version} is a -SNAPSHOT version; deploy to Central Snapshots"
             withMaven(
