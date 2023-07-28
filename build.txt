@@ -70,7 +70,7 @@ pipeline {
       }
       steps {
         script {
-          def isTagged = sh(returnStatus: true, script: "git describe --contains HEAD 2>/dev/null") == 0
+          def isTagged = sh(returnStatus: true, script: "git describe --contains ${env.GIT_COMMIT} 2>/dev/null") == 0
           def pom = readMavenPom file: 'pom.xml'
           def isSnapshot = pom.version.endsWith("-SNAPSHOT")
 
