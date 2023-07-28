@@ -84,6 +84,12 @@ pipeline {
             }
           } else if (isTagged) {
             echo "current git commit is tagged; deploy to Central"
+            withMaven(
+              maven: "maven-${mavenVersion}",
+              mavenLocalRepo: '.repository') {
+              sh 'env | sort'
+              sh 'mvn -Dbnd.baseline.skip=true -Dcheckstyle.skip=true -Denforcer.skip=true -DskipTests=true -Dspotbugs.skip=true -Dmdep.analyze.skip -Dio7m.release=true deploy'
+            }
           }
         }
       }
