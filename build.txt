@@ -1,0 +1,93 @@
+#!groovy
+
+def mavenVersion = "3.8.6"
+
+pipeline {
+
+  agent none
+
+  stages {
+    stage('Build') {
+      parallel {
+        stage('Build Linux') {
+          stages {
+            stage('Build:linux:openjdk-17-hotspot') {
+              agent {
+                label 'linux'
+              }
+              options {
+                timeout(time: 15, unit: 'MINUTES')
+              }
+              tools {
+                jdk   'openjdk-17-hotspot'
+                maven "maven-${mavenVersion}"
+              }
+              steps {
+                withMaven(
+                  maven: "maven-${mavenVersion}",
+                  mavenLocalRepo: '.repository') {
+                  sh 'env | sort'
+                  sh 'mvn -C -e -U clean install site'
+                }
+              }
+            }
+          }
+        }
+
+        stage('Build Windows') {
+          stages {
+            stage('Build:windows:openjdk-17-hotspot') {
+              agent {
+                label 'windows'
+              }
+              options {
+                timeout(time: 15, unit: 'MINUTES')
+              }
+              tools {
+                jdk   'openjdk-17-hotspot'
+                maven "maven-${mavenVersion}"
+              }
+              steps {
+                withMaven(
+                  maven: "maven-${mavenVersion}",
+                  mavenLocalRepo: '.repository') {
+                  bat 'mvn -C -e -U clean install site'
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    stage('Deploy:linux:openjdk-17-hotspot') {
+      agent {
+        label 'linux'
+      }
+      tools {
+        jdk   'openjdk-17-hotspot'
+        maven "maven-${mavenVersion}"
+      }
+      steps {
+        script {
+          def isTagged = sh(returnStatus: true, script: "git describe --contains HEAD 2>/dev/null") == 0
+          def pom = readMavenPom file: 'pom.xml'
+          def isSnapshot = pom.version.endsWith("-SNAPSHOT")
+
+          if (isSnapshot) {
+            echo "${pom.version} is a -SNAPSHOT version; deploy to Central Snapshots"
+            withMaven(
+              maven: "maven-${mavenVersion}",
+              mavenLocalRepo: '.repository') {
+              sh 'env | sort'
+              sh 'mvn -Dbnd.baseline.skip=true -Dcheckstyle.skip=true -Denforcer.skip=true -DskipTests=true -Dspotbugs.skip=true -Dmdep.analyze.skip deploy'
+            }
+          } else if (isTagged) {
+            echo "current git commit is tagged; deploy to Central"
+          }
+        }
+      }
+    }
+  }
+}
+
