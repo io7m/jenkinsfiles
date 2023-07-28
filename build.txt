@@ -1,6 +1,6 @@
 #!groovy
 
-def mavenVersion = "3.8.6"
+def mavenVersion = "3.9.1"
 
 pipeline {
 
